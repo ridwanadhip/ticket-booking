@@ -20,7 +20,15 @@ public class Venue {
 
     public Venue() {}
 
-    public Venue(Long id, String name, String imageUrl, String address, String city, String country) {
+    public Venue(
+            Long id,
+            String name,
+            String imageUrl,
+            String address,
+            String city,
+            String country
+    ) {
+
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
