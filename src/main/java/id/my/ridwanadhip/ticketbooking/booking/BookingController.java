@@ -64,7 +64,8 @@ public class BookingController {
         // generate booking data for each purchased ticket
         var newBooking = new ArrayList<Booking>();
         for (int i=0; i<totalTicket; i++) {
-            var serial = Generator.generateRandomStringWithPrefix(BOOKING_SERIAL_PREFIX);
+            var suffix = "%d".formatted(i+1); // indicates the ticket number
+            var serial = Generator.generateSerial(BOOKING_SERIAL_PREFIX, suffix);
             newBooking.add(Booking.NewBooking(userId, eventId, serial));
         }
 
@@ -83,10 +84,10 @@ public class BookingController {
 
         // check if the total of user's previously booked and requested ticket is exceeding limit
         if (requestedTicket + previousUserTicket > event.get().getMaxTicketPerUser()) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Requested ticket is more than the limit");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Requested ticket is more than event limit");
         }
 
-        // check if remaning ticket is more than the user requested ticket.
+        // check if remaining ticket is more than the user requested ticket.
         // formula: total of user ticket <= event max ticket - all booked ticket
         var totalBookedTicket = bookingRepository.countByEventIdAndStatus(eventId, bookedStatus);
         return requestedTicket <= event.get().getTotalTicket() - totalBookedTicket;

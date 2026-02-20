@@ -9,7 +9,7 @@ public class Generator {
         return "%d".formatted(timestamp);
     }
 
-    public static String generateRandomStringWithPrefix(String prefix) {
-        return "%s-%s".formatted(prefix, generateRandomString());
+    public static String generateSerial(String prefix, String suffix) {
+        return "%s-%s-%s".formatted(prefix, generateRandomString(), suffix);
     }
 }
