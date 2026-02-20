@@ -60,6 +60,9 @@ For the booking mechanism we will using this algorithm:
 4. Check if: `total user previous ticket + total new ticket request <= per user limit` . If true, continue.
 5. Create `booking data` and store it to database.
 
+All above steps is wrapped with database transaction, if a step is failed then abort the transaction (rollback). This
+will ensure no double booking / race condition issue happened when user try to booking tickets.
+
 ## 3. Entity diagram
 Here is the overview of database entity diagram:
 
