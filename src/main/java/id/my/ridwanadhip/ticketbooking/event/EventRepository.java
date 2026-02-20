@@ -12,6 +12,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     Page<Event> findAllByVenueId(Long venueId, Pageable pageable);
     Page<Event> findAllByStartAtBetween(LocalDateTime since, LocalDateTime until, Pageable pageable);
 
-    @NativeQuery("SELECT * FROM event e WHERE ?1 BETWEEN e.booking_start_at and e.booking_finish_at")
+    @NativeQuery("SELECT e.* FROM event e WHERE ?1 BETWEEN e.booking_start_at and e.booking_finish_at")
     Page<Event> findAllByBetweenBookingTime(LocalDateTime now, Pageable pageable);
 }
