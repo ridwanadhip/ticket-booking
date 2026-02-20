@@ -1,17 +1,16 @@
 package id.my.ridwanadhip.ticketbooking.event;
 
-import id.my.ridwanadhip.ticketbooking.venue.Venue;
 import id.my.ridwanadhip.ticketbooking.venue.VenueRepository;
 import id.my.ridwanadhip.ticketbooking.venue.VenueSummary;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -28,6 +27,41 @@ public class EventController {
     public EventController(EventRepository eventRepository, VenueRepository venueRepository) {
         this.eventRepository = eventRepository;
         this.venueRepository = venueRepository;
+    }
+
+    @GetMapping
+    public List<Event> findAll(
+            @RequestParam(name = "finishAfter", required = false) LocalDateTime finishAfter,
+            @RequestParam(name = "name", defaultValue = "") String name,
+            @RequestParam(name = "description", defaultValue = "") String description,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "pageSize", defaultValue = "10") int pageSize
+    ) {
+        Specification<Event> filter = Specification.unrestricted();
+
+        if (finishAfter != null) {
+            filter = filter.and(FilterBuilder.eventFinishAfter(finishAfter));
+        }
+
+        // TODO: using like with both prefix and suffix is slow. For further performance improvement, we can use search engine such as Elastisearch or Manticore
+        if (!name.isBlank()) {
+            if (name.length() < 3) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name search phrase must be 3 characters or more");
+            }
+
+            filter = filter.and(FilterBuilder.eventNameContains(name));
+        }
+
+        if (!description.isBlank()) {
+            if (description.length() < 3) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Description search phrase must be 3 characters or more");
+            }
+
+            filter = filter.and(FilterBuilder.eventDescriptionContains(description));
+        }
+
+        Pageable paging = PageRequest.of(page, pageSize);
+        return eventRepository.findAll(filter, paging).getContent();
     }
 
     @GetMapping(path = "/venue/{venueId}")

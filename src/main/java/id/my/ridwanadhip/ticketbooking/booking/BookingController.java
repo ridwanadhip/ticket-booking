@@ -36,6 +36,7 @@ public class BookingController {
         this.eventRepository = eventRepository;
     }
 
+    // wrap entire process behind transaction to prevent double booking issue
     @Transactional
     @PostMapping(path="/ticket", consumes = "application/json")
     public List<Booking> bookEvent(
