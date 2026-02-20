@@ -36,6 +36,7 @@ public class BookingController {
         this.eventRepository = eventRepository;
     }
 
+    @Transactional
     @PostMapping(path="/ticket", consumes = "application/json")
     public List<Booking> bookEvent(
             @RequestBody BookEvent request
@@ -55,9 +56,8 @@ public class BookingController {
         return GenerateBookingData(userId, eventId, request.requestedTicket());
     }
 
-    @Transactional
     public List<Booking> GenerateBookingData(long userId, long eventId, int totalTicket) {
-        if (!isTicketAvailable(eventId, totalTicket)) {
+        if (!isTicketAvailable(eventId, userId, totalTicket)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No more tickets available");
         }
 
@@ -71,23 +71,24 @@ public class BookingController {
         return bookingRepository.saveAll(newBooking);
     }
 
-    public boolean isTicketAvailable(long eventId, int requestedTicket) {
+    public boolean isTicketAvailable(long eventId, long userId, int requestedTicket) {
         // check if event exists
         Optional<Event> event = eventRepository.findById(eventId);
         if (event.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found");
         }
 
-        // check if user's total ticket is exceeding limit
-        if (requestedTicket > event.get().getMaxTicketPerUser()) {
+        var bookedStatus = BookingStatus.BOOKED.toString();
+        var previousUserTicket = bookingRepository.countByEventIdAndUserIdAndStatus(eventId, userId, bookedStatus);
+
+        // check if the total of user's previously booked and requested ticket is exceeding limit
+        if (requestedTicket + previousUserTicket > event.get().getMaxTicketPerUser()) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Requested ticket is more than the limit");
         }
 
-        // TODO: check previously booked ticket from the same user
-
         // check if remaning ticket is more than the user requested ticket.
         // formula: total of user ticket <= event max ticket - all booked ticket
-        var totalBookedTicket = bookingRepository.countByEventIdAndStatus(eventId, BookingStatus.BOOKED.toString());
+        var totalBookedTicket = bookingRepository.countByEventIdAndStatus(eventId, bookedStatus);
         return requestedTicket <= event.get().getTotalTicket() - totalBookedTicket;
     }
 }
