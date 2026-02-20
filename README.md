@@ -19,7 +19,7 @@ java -jar app.jar
 Or you can set the environment variable value in your shell. 
 
 ### C. Build using Docker
-Before run we need to prepare a `.env` file in root projec folder that contains db secret. Example:
+Before run we need to prepare a `.env` file in root project folder that contains db secret. Example:
 ```
 MYSQL_DATABASE=db
 MYSQL_PASSWORD=pass
@@ -45,22 +45,22 @@ will omit:
 2. Caching
 3. Non important data such as performer, geolocation, tagging, etc.
 
-This code implement basic data retrieval for concert and booking data. The details will be explained in next chapters.
+This code implements basic data retrieval for concert and booking data. The details will be explained in next chapters.
 
 We will add these constraints to improve usability during booking and searching:
 1. Generalize concert data into `event`, separate location into `venue` data.
-2. Each user may books more than 1 ticket, the data will called `booking`.
+2. Each user may books more than one ticket, the data will be called `booking`.
 3. Each `event` has maximum booking limit for each user, to prevent abusement.
 4. Each `event` has booking time duration, separated from actual event duration.
 
 For the booking mechanism we will using this algorithm:
 1. Check if user and event (concert) exist. If exists then continue.
-2. Check if event ticket still available, booked ticket must be less than ticket limit. If available, continue.
+2. Check if event ticket still available. Booked ticket must be less than the ticket limit. If available, continue.
 3. Check if: `total user previous ticket + total new ticket request <= event ticket limit` . If true, continue.
 4. Check if: `total user previous ticket + total new ticket request <= per user limit` . If true, continue.
 5. Create `booking data` and store it to database.
 
-All above steps is wrapped with database transaction, if a step is failed then abort the transaction (rollback). This
+All above steps are wrapped with database transaction, if a step is failed then abort the transaction (rollback). This
 will ensure no double booking / race condition issue happened when user try to booking tickets.
 
 ## 3. Entity diagram
