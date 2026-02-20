@@ -5,7 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 public class Booking {
@@ -16,7 +16,7 @@ public class Booking {
     private long userId;
     private long eventId;
     private String ticketSerial;
-    private LocalDate bookedAt;
+    private LocalDateTime bookedAt;
     private String status;
 
     public Booking(){}
@@ -26,7 +26,7 @@ public class Booking {
             long userId,
             long eventId,
             String ticketSerial,
-            LocalDate bookedAt,
+            LocalDateTime bookedAt,
             String status
     ) {
 
@@ -36,6 +36,21 @@ public class Booking {
         this.ticketSerial = ticketSerial;
         this.bookedAt = bookedAt;
         this.status = status;
+    }
+
+    public static Booking NewBooking(
+            long userId,
+            long eventId,
+            String ticketSerial
+    ) {
+        var result = new Booking();
+        result.setUserId(userId);
+        result.setEventId(eventId);
+        result.setTicketSerial(ticketSerial);
+        result.setBookedAt(LocalDateTime.now());
+        result.setStatus(BookingStatus.BOOKED.toString());
+
+        return result;
     }
 
     public Long getId() {
@@ -70,11 +85,11 @@ public class Booking {
         this.ticketSerial = ticketSerial;
     }
 
-    public LocalDate getBookedAt() {
+    public LocalDateTime getBookedAt() {
         return bookedAt;
     }
 
-    public void setBookedAt(LocalDate bookedAt) {
+    public void setBookedAt(LocalDateTime bookedAt) {
         this.bookedAt = bookedAt;
     }
 

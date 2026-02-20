@@ -48,7 +48,7 @@ CREATE INDEX idx_venue_name ON venue (name);
 CREATE INDEX idx_venue_city ON venue (city);
 CREATE INDEX idx_venue_country ON venue (country);
 CREATE INDEX idx_booking_user ON booking (user_id);
-CREATE INDEX idx_booking_event ON booking (event_id);
+CREATE INDEX idx_booking_event_status ON booking (event_id, status);
 CREATE INDEX idx_event_name ON event (name);
 CREATE INDEX idx_event_venue ON event (venue_id);
 CREATE INDEX idx_event_time ON event (start_at, finish_at);
