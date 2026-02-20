@@ -3,12 +3,15 @@ package id.my.ridwanadhip.ticketbooking.event;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping(path="/api/v1/event")
+@RequestMapping(path = "/api/v1/event")
 public class EventController {
     private static final int DEFAULT_UPCOMING_EVENT_DAY_LIMIT = 7;
 
@@ -18,22 +21,22 @@ public class EventController {
         this.eventRepository = eventRepository;
     }
 
-    @GetMapping(path="/venue/{venueId}")
+    @GetMapping(path = "/venue/{venueId}")
     public List<Event> findAllByVenueId(
             @PathVariable long venueId,
-            @RequestParam(name="page", defaultValue = "0") int page,
-            @RequestParam(name="pageSize", defaultValue = "10") int pageSize
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "pageSize", defaultValue = "10") int pageSize
     ) {
 
         Pageable paging = PageRequest.of(page, pageSize);
         return eventRepository.findAllByVenueId(venueId, paging).getContent();
     }
 
-    @GetMapping(path="/upcoming")
+    @GetMapping(path = "/upcoming")
     public List<Event> findUpcomingEvents(
-            @RequestParam(name="until", required = false) LocalDateTime until,
-            @RequestParam(name="page", defaultValue = "0") int page,
-            @RequestParam(name="pageSize", defaultValue = "10") int pageSize
+            @RequestParam(name = "until", required = false) LocalDateTime until,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "pageSize", defaultValue = "10") int pageSize
     ) {
 
         var since = LocalDateTime.now();
@@ -45,14 +48,26 @@ public class EventController {
         return eventRepository.findAllByStartAtBetween(since, until, paging).getContent();
     }
 
-    @GetMapping(path="/bookable")
+    @GetMapping(path = "/bookable")
     public List<Event> findBookableEvents(
-            @RequestParam(name="page", defaultValue = "0") int page,
-            @RequestParam(name="pageSize", defaultValue = "10") int pageSize
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "pageSize", defaultValue = "10") int pageSize
     ) {
 
         var now = LocalDateTime.now();
         Pageable paging = PageRequest.of(page, pageSize);
         return eventRepository.findAllByBetweenBookingTime(now, paging).getContent();
+    }
+
+    @GetMapping(path = "/{id}")
+    public Event findById(
+            @PathVariable long id
+    ) {
+        var findResult = eventRepository.findById(id);
+        if (findResult.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found");
+        }
+
+        return findResult.get();
     }
 }

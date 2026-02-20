@@ -3,10 +3,9 @@ package id.my.ridwanadhip.ticketbooking.venue;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -38,5 +37,17 @@ public class VenueController {
 
         Pageable paging = PageRequest.of(page, pageSize);
         return venueRepository.findAll(filter, paging).getContent();
+    }
+
+    @GetMapping(path = "/{id}")
+    public Venue findById(
+            @PathVariable long id
+    ) {
+        var findResult = venueRepository.findById(id);
+        if (findResult.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Venue not found");
+        }
+
+        return findResult.get();
     }
 }

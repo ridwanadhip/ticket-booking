@@ -2,7 +2,7 @@ CREATE TABLE user
 (
     id    BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL,
     name  VARCHAR(50)  NOT NULL,
-    email VARCHAR(100) NOT NULL
+    email VARCHAR(100) UNIQUE NOT NULL
 );
 
 CREATE TABLE venue
@@ -50,6 +50,7 @@ CREATE INDEX idx_venue_country ON venue (country);
 CREATE INDEX idx_booking_user ON booking (user_id);
 CREATE INDEX idx_booking_event ON booking (event_id);
 CREATE INDEX idx_event_name ON event (name);
+CREATE INDEX idx_event_venue ON event (venue_id);
 CREATE INDEX idx_event_time ON event (start_at, finish_at);
 CREATE INDEX idx_event_booking_time ON event (booking_start_at, booking_finish_at);
 
