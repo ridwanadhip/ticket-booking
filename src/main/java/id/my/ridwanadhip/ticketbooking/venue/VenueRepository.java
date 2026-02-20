@@ -7,9 +7,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface VenueRepository extends JpaRepository<Venue,Long> {
-    List<VenueSummary> findAllByIdIn(List<Long> ids);
+    List<VenueSummary> findAllSummaryByIdIn(List<Long> ids);
+    Optional<VenueSummary> findSummaryById(long id);
     Page<Venue> findAll(Specification<Venue> spec, Pageable pageable);
 }
