@@ -4,7 +4,7 @@ import id.my.ridwanadhip.ticketbooking.event.Event;
 import id.my.ridwanadhip.ticketbooking.event.EventRepository;
 import id.my.ridwanadhip.ticketbooking.user.User;
 import id.my.ridwanadhip.ticketbooking.user.UserRepository;
-import id.my.ridwanadhip.ticketbooking.util.Generator;
+import id.my.ridwanadhip.ticketbooking.util.StringGenerator;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -65,8 +65,8 @@ public class BookingController {
         // generate booking data for each purchased ticket
         var newBooking = new ArrayList<Booking>();
         for (int i=0; i<totalTicket; i++) {
-            var suffix = "%d".formatted(i+1); // indicates the ticket number
-            var serial = Generator.generateSerial(BOOKING_SERIAL_PREFIX, suffix);
+            var suffix = String.valueOf(i+1); // indicates the ticket number
+            var serial = StringGenerator.randomSerial(BOOKING_SERIAL_PREFIX, suffix);
             newBooking.add(Booking.NewBooking(userId, eventId, serial));
         }
 
