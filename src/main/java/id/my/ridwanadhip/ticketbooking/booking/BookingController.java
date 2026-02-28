@@ -16,7 +16,7 @@ public class BookingController {
     }
 
     @PostMapping(path = "/ticket", consumes = "application/json")
-    public List<Booking> bookEvent(
+    public List<BookingDTO> bookEvent(
             @RequestBody BookEvent request
     ) {
         return bookingService.bookEvent(request);

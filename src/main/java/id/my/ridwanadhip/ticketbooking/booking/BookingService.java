@@ -33,7 +33,7 @@ public class BookingService {
 
     // wrap entire process behind transaction to prevent double booking issue
     @Transactional
-    public List<Booking> bookEvent(
+    public List<BookingDTO> bookEvent(
             BookEvent request
     ) {
         // check if user exists
@@ -42,10 +42,11 @@ public class BookingService {
             return List.of();
         }
 
-        var userId = user.get().getId();
-
         // generate booking data for each purchased ticket
-        return generateBookingData(userId, request.eventId(), request.requestedTicket());
+        var userId = user.get().getId();
+        var bookings = generateBookingData(userId, request.eventId(), request.requestedTicket());
+
+        return bookings.stream().map(BookingDTO::fromBooking).toList();
     }
 
     private List<Booking> generateBookingData(long userId, long eventId, int totalTicket) {
