@@ -17,7 +17,7 @@ public class GlobalExceptionHandler {
                 ex.getStatusCode().toString(),
                 ex.getReason()
         );
-        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(errorResponse, ex.getStatusCode());
     }
 
     @ExceptionHandler(Exception.class)
