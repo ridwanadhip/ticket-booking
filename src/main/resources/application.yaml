@@ -2,7 +2,6 @@ spring:
   application:
     name: ticket-booking
   datasource:
-    url: 'jdbc:mysql://${MYSQL_HOST}/${MYSQL_DATABASE}'
+    url: 'jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATABASE}'
     username: ${MYSQL_USER}
     password: ${MYSQL_PASSWORD}
-    driver-class-name: 'com.mysql.cj.jdbc.Driver'
