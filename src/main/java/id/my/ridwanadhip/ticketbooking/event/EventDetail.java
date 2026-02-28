@@ -21,6 +21,25 @@ public record EventDetail(
         String venueCity,
         String venueCountry
 ) {
+    public static EventDetail from(Event event) {
+        return new EventDetail(
+                event.getId(),
+                event.getName(),
+                event.getImageUrl(),
+                event.getDescription(),
+                event.getStartAt(),
+                event.getFinishAt(),
+                event.getBookingStartAt(),
+                event.getBookingFinishAt(),
+                event.getTotalTicket(),
+                event.getMaxTicketPerUser(),
+                event.getTicketPrice(),
+                event.getVenueId(),
+                "",
+                "",
+                ""
+        );
+    }
 
     public static EventDetail from(Event event, VenueSummary venue) {
         return new EventDetail(

@@ -1,5 +1,8 @@
-package id.my.ridwanadhip.ticketbooking.venue;
+package id.my.ridwanadhip.ticketbooking.controller;
 
+import id.my.ridwanadhip.ticketbooking.venue.FindAllVenueRequest;
+import id.my.ridwanadhip.ticketbooking.venue.VenueDTO;
+import id.my.ridwanadhip.ticketbooking.venue.VenueService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
