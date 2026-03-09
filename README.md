@@ -13,7 +13,8 @@ Then pass the necessary database secret via environment variable before running 
 MYSQL_DATABASE=db \
 MYSQL_PASSWORD=pass \
 MYSQL_USER=user \
-MYSQL_HOST=localhost:3306 \
+MYSQL_HOST=localhost \
+MYSQL_PORT=3306 \
 java -jar app.jar
 ```
 Or you can set the environment variable value in your shell. 
@@ -25,7 +26,6 @@ MYSQL_DATABASE=db
 MYSQL_PASSWORD=pass
 MYSQL_ROOT_PASSWORD=rootpass
 MYSQL_USER=user
-MYSQL_HOST=localhost:3306
 ```
 
 Then run docker compose to activate the mysql and the API server:
