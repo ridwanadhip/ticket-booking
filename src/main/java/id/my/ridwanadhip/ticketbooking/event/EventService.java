@@ -2,13 +2,13 @@ package id.my.ridwanadhip.ticketbooking.event;
 
 import id.my.ridwanadhip.ticketbooking.venue.VenueRepository;
 import id.my.ridwanadhip.ticketbooking.venue.VenueSummary;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -21,10 +21,12 @@ public class EventService {
 
     private final EventRepository eventRepository;
     private final VenueRepository venueRepository;
+    private final ConversionService conversionService;
 
-    public EventService(EventRepository eventRepository, VenueRepository venueRepository) {
+    public EventService(EventRepository eventRepository, VenueRepository venueRepository, ConversionService conversionService) {
         this.eventRepository = eventRepository;
         this.venueRepository = venueRepository;
+        this.conversionService = conversionService;
     }
 
     public List<EventDTO> findAll(
@@ -51,13 +53,17 @@ public class EventService {
 
         Pageable paging = PageRequest.of(page, pageSize);
         var events = eventRepository.findAll(filter, paging).getContent();
-        return events.stream().map(EventDTO::fromEvent).toList();
+        return events.stream().
+                map(e -> conversionService.convert(e, EventDTO.class)).
+                toList();
     }
 
     public List<EventDTO> findAllByVenueId(long venueId, int page, int pageSize) {
         Pageable paging = PageRequest.of(page, pageSize);
         var events = eventRepository.findAllByVenueId(venueId, paging).getContent();
-        return events.stream().map(EventDTO::fromEvent).toList();
+        return events.stream().
+                map(e -> conversionService.convert(e, EventDTO.class)).
+                toList();
     }
 
     public List<EventDetail> findUpcomingEvents(Optional<LocalDateTime> until, int page, int pageSize) {
@@ -75,10 +81,8 @@ public class EventService {
 
         // combine event and venue data
         return events.stream().
-                map(event -> {
-                    var venueSummary = venueSummaryMap.get(event.getVenueId());
-                    return EventDetail.from(event, venueSummary);
-                }).toList();
+                map(e -> EventDetail.from(e, venueSummaryMap.get(e.getVenueId()))).
+                toList();
     }
 
     public List<EventDetail> findBookableEvents(int page, int pageSize) {
@@ -90,10 +94,8 @@ public class EventService {
 
         // combine event and venue data
         return events.stream().
-                map(event -> {
-                    var venueSummary = venueSummaryMap.get(event.getVenueId());
-                    return EventDetail.from(event, venueSummary);
-                }).toList();
+                map(e -> EventDetail.from(e, venueSummaryMap.get(e.getVenueId()))).
+                toList();
     }
 
     public Optional<EventDetail> findById(long id) {
