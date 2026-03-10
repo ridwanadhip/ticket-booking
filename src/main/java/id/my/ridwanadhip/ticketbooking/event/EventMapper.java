@@ -12,10 +12,8 @@ public interface EventMapper {
     EventDTO toEventDTO(Event event);
     EventDetail toEventDetail(Event event);
 
-    @Mapping(source = "venueSummary.id", target = "venue.id")
-    @Mapping(source = "venueSummary.name", target = "venue.name")
-    @Mapping(source = "venueSummary.city", target = "venue.city")
-    @Mapping(source = "venueSummary.country", target = "venue.country")
-    EventDetail toEventDetail(Event event, VenueSummary venueSummary);
+    @Mapping(source = "event.id", target = "id")
+    @Mapping(source = "event.name", target = "name")
+    EventDetail toEventDetail(Event event, VenueSummary venue);
 }
 

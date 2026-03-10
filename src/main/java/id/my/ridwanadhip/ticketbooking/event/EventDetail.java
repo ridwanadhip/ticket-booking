@@ -3,10 +3,10 @@ package id.my.ridwanadhip.ticketbooking.event;
 import java.time.LocalDateTime;
 
 record EventVenue (
-        long venueId,
-        String venueName,
-        String venueCity,
-        String venueCountry
+        long id,
+        String name,
+        String city,
+        String country
 ) {
 
 }

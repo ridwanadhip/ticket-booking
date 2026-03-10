@@ -1,21 +1,15 @@
 package id.my.ridwanadhip.ticketbooking.controller;
 
-import id.my.ridwanadhip.ticketbooking.event.*;
-import id.my.ridwanadhip.ticketbooking.venue.VenueRepository;
-import id.my.ridwanadhip.ticketbooking.venue.VenueSummary;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
+import id.my.ridwanadhip.ticketbooking.event.EventDTO;
+import id.my.ridwanadhip.ticketbooking.event.EventDetail;
+import id.my.ridwanadhip.ticketbooking.event.EventService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/api/v1/event")
@@ -36,11 +30,11 @@ public class EventController {
     ) {
 
         // TODO: using like with both prefix and suffix is slow. For further performance improvement, we can use search engine such as Elastisearch or Manticore
-        if (name.trim().length() < 3) {
+        if (!name.isBlank() && name.trim().length() < 3) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name search phrase must be 3 characters or more");
         }
 
-        if (description.trim().length() < 3) {
+        if (!description.isBlank() && description.trim().length() < 3) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Description search phrase must be 3 characters or more");
         }
 
