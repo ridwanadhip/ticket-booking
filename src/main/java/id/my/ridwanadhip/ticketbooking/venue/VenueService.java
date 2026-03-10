@@ -1,6 +1,5 @@
 package id.my.ridwanadhip.ticketbooking.venue;
 
-import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -12,16 +11,14 @@ import java.util.Optional;
 @Service
 public class VenueService {
     private final VenueRepository venueRepository;
-    private final ConversionService conversionService;
 
-    public  VenueService(VenueRepository venueRepository, ConversionService conversionService) {
+    public  VenueService(VenueRepository venueRepository) {
         this.venueRepository = venueRepository;
-        this.conversionService = conversionService;
     }
 
     public Optional<VenueDTO> findById(long id) {
         var venue = venueRepository.findById(id);
-        return venue.map(e -> conversionService.convert(e, VenueDTO.class));
+        return venue.map(VenueMapper.INSTANCE::toVenueDTO);
     }
 
     public List<VenueDTO> findAll(FindAllVenueRequest request) {
@@ -38,7 +35,7 @@ public class VenueService {
         Pageable paging = PageRequest.of(request.page(), request.pageSize());
         var venues = venueRepository.findAll(filter, paging).getContent();
         return venues.stream().
-                map(e -> conversionService.convert(e, VenueDTO.class)).
+                map(VenueMapper.INSTANCE::toVenueDTO).
                 toList();
     }
 }

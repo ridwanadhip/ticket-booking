@@ -5,7 +5,6 @@ import id.my.ridwanadhip.ticketbooking.event.EventRepository;
 import id.my.ridwanadhip.ticketbooking.user.User;
 import id.my.ridwanadhip.ticketbooking.user.UserRepository;
 import id.my.ridwanadhip.ticketbooking.util.StringGenerator;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,18 +20,15 @@ public class BookingService {
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
     private final EventRepository eventRepository;
-    private final ConversionService conversionService;
 
     public BookingService(
             BookingRepository bookingRepository,
             UserRepository userRepository,
-            EventRepository eventRepository,
-            ConversionService conversionService
+            EventRepository eventRepository
     ) {
         this.bookingRepository = bookingRepository;
         this.userRepository = userRepository;
         this.eventRepository = eventRepository;
-        this.conversionService = conversionService;
     }
 
     // wrap entire process behind transaction to prevent double booking issue
@@ -48,7 +44,7 @@ public class BookingService {
         var userId = user.get().getId();
         var bookings = generateBookingData(userId, request.eventId(), request.requestedTicket());
 
-        return bookings.stream().map(e -> conversionService.convert(e, BookingDTO.class)).toList();
+        return bookings.stream().map(BookingMapper.INSTANCE::toBookingDTO).toList();
     }
 
     private List<Booking> generateBookingData(long userId, long eventId, int totalTicket) {

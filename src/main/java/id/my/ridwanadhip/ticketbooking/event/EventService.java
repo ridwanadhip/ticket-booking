@@ -2,7 +2,6 @@ package id.my.ridwanadhip.ticketbooking.event;
 
 import id.my.ridwanadhip.ticketbooking.venue.VenueRepository;
 import id.my.ridwanadhip.ticketbooking.venue.VenueSummary;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -21,12 +20,10 @@ public class EventService {
 
     private final EventRepository eventRepository;
     private final VenueRepository venueRepository;
-    private final ConversionService conversionService;
 
-    public EventService(EventRepository eventRepository, VenueRepository venueRepository, ConversionService conversionService) {
+    public EventService(EventRepository eventRepository, VenueRepository venueRepository) {
         this.eventRepository = eventRepository;
         this.venueRepository = venueRepository;
-        this.conversionService = conversionService;
     }
 
     public List<EventDTO> findAll(
@@ -54,7 +51,7 @@ public class EventService {
         Pageable paging = PageRequest.of(page, pageSize);
         var events = eventRepository.findAll(filter, paging).getContent();
         return events.stream().
-                map(e -> conversionService.convert(e, EventDTO.class)).
+                map(EventMapper.INSTANCE::toEventDTO).
                 toList();
     }
 
@@ -62,7 +59,7 @@ public class EventService {
         Pageable paging = PageRequest.of(page, pageSize);
         var events = eventRepository.findAllByVenueId(venueId, paging).getContent();
         return events.stream().
-                map(e -> conversionService.convert(e, EventDTO.class)).
+                map(EventMapper.INSTANCE::toEventDTO).
                 toList();
     }
 
@@ -81,7 +78,7 @@ public class EventService {
 
         // combine event and venue data
         return events.stream().
-                map(e -> EventDetail.from(e, venueSummaryMap.get(e.getVenueId()))).
+                map(e -> EventMapper.INSTANCE.toEventDetail(e, venueSummaryMap.get(e.getVenueId()))).
                 toList();
     }
 
@@ -94,7 +91,7 @@ public class EventService {
 
         // combine event and venue data
         return events.stream().
-                map(e -> EventDetail.from(e, venueSummaryMap.get(e.getVenueId()))).
+                map(e -> EventMapper.INSTANCE.toEventDetail(e, venueSummaryMap.get(e.getVenueId()))).
                 toList();
     }
 
@@ -106,10 +103,10 @@ public class EventService {
 
         Optional<VenueSummary> venueSummary = venueRepository.findSummaryById(event.get().getVenueId());
         if (venueSummary.isEmpty()) {
-            return Optional.of(EventDetail.from(event.get()));
+            return Optional.of(EventMapper.INSTANCE.toEventDetail(event.get()));
         }
 
-        return Optional.of(EventDetail.from(event.get(), venueSummary.get()));
+        return Optional.of(EventMapper.INSTANCE.toEventDetail(event.get(), venueSummary.get()));
     }
 
     private Map<Long, VenueSummary> findVenueSummaryFromEvents(List<Event> events) {

@@ -28,7 +28,6 @@
     </scm>
     <properties>
         <java.version>25</java.version>
-        <mapstruct.spring.version>2.0.0</mapstruct.spring.version>
         <mapstruct.version>1.6.3</mapstruct.version>
     </properties>
     <dependencies>
@@ -76,11 +75,6 @@
             <artifactId>mapstruct</artifactId>
             <version>${mapstruct.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.mapstruct.extensions.spring</groupId>
-            <artifactId>mapstruct-spring-annotations</artifactId>
-            <version>${mapstruct.spring.version}</version>
-        </dependency>
     </dependencies>
 
     <build>
@@ -102,11 +96,6 @@
                             <groupId>org.mapstruct</groupId>
                             <artifactId>mapstruct-processor</artifactId>
                             <version>${mapstruct.version}</version>
-                        </path>
-                        <path>
-                            <groupId>org.mapstruct.extensions.spring</groupId>
-                            <artifactId>mapstruct-spring-extensions</artifactId>
-                            <version>${mapstruct.spring.version}</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>

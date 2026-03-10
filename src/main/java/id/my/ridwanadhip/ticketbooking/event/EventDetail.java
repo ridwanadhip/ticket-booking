@@ -1,8 +1,15 @@
 package id.my.ridwanadhip.ticketbooking.event;
 
-import id.my.ridwanadhip.ticketbooking.venue.VenueSummary;
-
 import java.time.LocalDateTime;
+
+record EventVenue (
+        long venueId,
+        String venueName,
+        String venueCity,
+        String venueCountry
+) {
+
+}
 
 public record EventDetail (
         long id,
@@ -16,48 +23,7 @@ public record EventDetail (
         int totalTicket,
         int maxTicketPerUser,
         double ticketPrice,
-        long venueId,
-        String venueName,
-        String venueCity,
-        String venueCountry
+        EventVenue venue
 ) {
-    public static EventDetail from(Event event) {
-        return new EventDetail(
-                event.getId(),
-                event.getName(),
-                event.getImageUrl(),
-                event.getDescription(),
-                event.getStartAt(),
-                event.getFinishAt(),
-                event.getBookingStartAt(),
-                event.getBookingFinishAt(),
-                event.getTotalTicket(),
-                event.getMaxTicketPerUser(),
-                event.getTicketPrice(),
-                event.getVenueId(),
-                "",
-                "",
-                ""
-        );
-    }
 
-    public static EventDetail from(Event event, VenueSummary venue) {
-        return new EventDetail(
-                event.getId(),
-                event.getName(),
-                event.getImageUrl(),
-                event.getDescription(),
-                event.getStartAt(),
-                event.getFinishAt(),
-                event.getBookingStartAt(),
-                event.getBookingFinishAt(),
-                event.getTotalTicket(),
-                event.getMaxTicketPerUser(),
-                event.getTicketPrice(),
-                event.getVenueId(),
-                venue.getName(),
-                venue.getCity(),
-                venue.getCountry()
-        );
-    }
 }
