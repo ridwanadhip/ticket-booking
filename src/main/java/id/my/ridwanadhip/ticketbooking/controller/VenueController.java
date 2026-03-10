@@ -25,6 +25,14 @@ public class VenueController {
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "pageSize", defaultValue = "10") int pageSize
     ) {
+        if (!city.isBlank() && city.trim().length() < 3) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "City search phrase must be 3 characters or more");
+        }
+
+        if (!country.isBlank() && country.trim().length() < 3) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Country search phrase must be 3 characters or more");
+        }
+
         var request = new FindAllVenueRequest(city, country, page, pageSize);
         return venueService.findAll(request);
     }
