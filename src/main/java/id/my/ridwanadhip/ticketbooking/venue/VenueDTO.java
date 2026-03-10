@@ -9,14 +9,4 @@ public record VenueDTO(
         String country
 ) {
 
-    public static VenueDTO fromVenue(Venue venue) {
-        return new VenueDTO(
-                venue.getId(),
-                venue.getName(),
-                venue.getImageUrl(),
-                venue.getAddress(),
-                venue.getCity(),
-                venue.getCountry()
-        );
-    }
 }

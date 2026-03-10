@@ -17,20 +17,4 @@ public record EventDTO(
         long venueId
 ) {
 
-    public static EventDTO fromEvent(Event event) {
-        return new EventDTO(
-                event.getId(),
-                event.getName(),
-                event.getImageUrl(),
-                event.getDescription(),
-                event.getStartAt(),
-                event.getFinishAt(),
-                event.getBookingStartAt(),
-                event.getBookingFinishAt(),
-                event.getTotalTicket(),
-                event.getMaxTicketPerUser(),
-                event.getTicketPrice(),
-                event.getVenueId()
-        );
-    }
 }

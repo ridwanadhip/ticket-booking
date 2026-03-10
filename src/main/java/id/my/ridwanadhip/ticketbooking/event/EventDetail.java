@@ -4,7 +4,7 @@ import id.my.ridwanadhip.ticketbooking.venue.VenueSummary;
 
 import java.time.LocalDateTime;
 
-public record EventDetail(
+public record EventDetail (
         long id,
         String name,
         String imageUrl,

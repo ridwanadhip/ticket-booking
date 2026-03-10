@@ -11,14 +11,4 @@ public record BookingDTO(
         String status
 ) {
 
-    public static BookingDTO fromBooking(Booking booking) {
-        return new BookingDTO(
-                booking.getId(),
-                booking.getUserId(),
-                booking.getEventId(),
-                booking.getTicketSerial(),
-                booking.getBookedAt(),
-                booking.getStatus()
-        );
-    }
 }

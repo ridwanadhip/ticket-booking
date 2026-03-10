@@ -37,9 +37,7 @@ public class BookingService {
 
     // wrap entire process behind transaction to prevent double booking issue
     @Transactional
-    public List<BookingDTO> bookEvent(
-            BookEvent request
-    ) {
+    public List<BookingDTO> bookEvent(BookEventRequest request) {
         // check if user exists
         Optional<User> user = userRepository.findByEmail(request.userEmail());
         if (user.isEmpty()) {

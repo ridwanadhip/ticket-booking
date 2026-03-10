@@ -1,6 +1,6 @@
 package id.my.ridwanadhip.ticketbooking.controller;
 
-import id.my.ridwanadhip.ticketbooking.booking.BookEvent;
+import id.my.ridwanadhip.ticketbooking.booking.BookEventRequest;
 import id.my.ridwanadhip.ticketbooking.booking.BookingDTO;
 import id.my.ridwanadhip.ticketbooking.booking.BookingService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +20,7 @@ public class BookingController {
 
     @PostMapping(path = "/ticket", consumes = "application/json")
     public List<BookingDTO> bookEvent(
-            @RequestBody BookEvent request
+            @RequestBody BookEventRequest request
     ) {
         return bookingService.bookEvent(request);
     }
